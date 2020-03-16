@@ -6,6 +6,14 @@
     <title>Coronavirus Tracker Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style>
+    .red{color: red;
+    	font-weight: bold;
+    	}
+    .green{color: green;
+    	font-weight: bold;
+    	}
+    </style>
 </head>
 
 <body>
@@ -19,7 +27,7 @@
     <hr class="my-4">
     <p>
         <span>New cases reported since previous day:</span>
-        <span th:text="${totalNewCases}"></span>
+        <span th:class="${totalNewCases>totalNewCases2}? 'red' : 'green'" th:text="${totalNewCases}"></span>
     </p>
 
 </div>
@@ -29,13 +37,14 @@
             <th>State</th>
             <th>Country</th>
             <th>Total cases reported</th>
-            <th>Changes since last day</th>
+            <th>Changes since last day</th>            
         </tr>
         <tr th:each="locationStat : ${locationStats}">
             <td th:text="${locationStat.state}"></td>
             <td th:text="${locationStat.country}"></td>
             <td th:text="${locationStat.latestTotalCases}">0</td>
-            <td th:text="${locationStat.diffFromPrevDay}">0</td>
+            <td th:class="${locationStat.diffFromPrevDay>locationStat.diffFromPrevDay2}? 'red' : 'green'" th:text="${locationStat.diffFromPrevDay}">0</td>
+            
         </tr>
     </table>
 </div>
