@@ -34,6 +34,7 @@ public class HomeController {
         int totalNewCases2 = allStats.stream().mapToInt(stat -> stat.getDiffFromPrevDay2()).sum();
         //	allStats = contraida(allStats);
         model.addAttribute("locationStats", allStats);
+        model.addAttribute("lastDateData", allStats.get(0).getLastDateData());
         model.addAttribute("totalReportedCases", totalReportedCases);
         model.addAttribute("totalNewCases", totalNewCases);
         model.addAttribute("totalNewCases2", totalNewCases2);
@@ -64,8 +65,7 @@ public class HomeController {
     	for (String clave:aux.keySet()) {
     		res.add(aux.get(clave));
     	}
-    	
-    	
+
     	return res;
     }
     

@@ -7,6 +7,7 @@ public class LocationStats {
     private int latestTotalCases;
     private int diffFromPrevDay;
     private int diffFromPrevDay2;
+    private String lastDateData;
 
     public int getDiffFromPrevDay2() {
 		return diffFromPrevDay2;
@@ -48,7 +49,15 @@ public class LocationStats {
         this.latestTotalCases = latestTotalCases;
     }
 
-    @Override
+    public String getLastDateData() {
+		return lastDateData;
+	}
+
+	public void setLastDateData(String lastDateData) {
+		this.lastDateData = lastDateData;
+	}
+
+	@Override
     public String toString() {
         return "LocationStats{" +
                 "state='" + state + '\'' +

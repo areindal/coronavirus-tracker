@@ -12,6 +12,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,20 +46,28 @@ public class CoronaVirusDataService {
                 .build();
         HttpResponse<String> httpResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
         StringReader csvBodyReader = new StringReader(httpResponse.body());
+        //CSVParser parser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(csvBodyReader);
+        
         Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(csvBodyReader);
+        String resultsLastDate = ((CSVParser)records).getHeaderNames().get(((CSVParser)records).getHeaderNames().size()-1);
+        //CSVRecord aux = (CSVRecord)records.
         for (CSVRecord record : records) {
         	
             LocationStats locationStat = new LocationStats();
+            locationStat.setLastDateData(resultsLastDate);
             locationStat.setState(record.get("Province/State"));
             locationStat.setCountry(record.get("Country/Region"));
+            if (locationStat.getCountry().equals("Japan")) {
+            	System.out.println("JAPAN");
+            }
             int latestCases = Integer.parseInt(record.get(record.size() - 1));
             int prevDayCases = Integer.parseInt(record.get(record.size() - 2));
             int prevDayCases2 = Integer.parseInt(record.get(record.size() - 3));
             locationStat.setLatestTotalCases(latestCases);
-            locationStat.setDiffFromPrevDay(latestCases - prevDayCases);
+            locationStat.setDiffFromPrevDay((latestCases - prevDayCases>0)?latestCases - prevDayCases:0);
             locationStat.setDiffFromPrevDay2(prevDayCases-prevDayCases2);
-           // if (locationStat.getCountry().equalsIgnoreCase("Australia"))
-            	newStats.add(locationStat);
+            //loca
+            newStats.add(locationStat);
         }
         this.allStats = newStats;
     }
