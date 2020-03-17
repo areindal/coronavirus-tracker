@@ -57,9 +57,7 @@ public class CoronaVirusDataService {
             locationStat.setLastDateData(resultsLastDate);
             locationStat.setState(record.get("Province/State"));
             locationStat.setCountry(record.get("Country/Region"));
-            if (locationStat.getCountry().equals("Japan")) {
-            	System.out.println("JAPAN");
-            }
+
             int latestCases = Integer.parseInt(record.get(record.size() - 1));
             int prevDayCases = Integer.parseInt(record.get(record.size() - 2));
             int prevDayCases2 = Integer.parseInt(record.get(record.size() - 3));
