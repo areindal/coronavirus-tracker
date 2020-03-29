@@ -37,7 +37,7 @@ public class CoronaVirusDataService {
     @Scheduled(cron = "* 1 * * * *")
     public void fetchVirusData() throws IOException, InterruptedException {
     	LOGGER.info("------------------------------------------------------------------------------------------------------------");
-    	LOGGER.info("--------------------------------------->Recuperando informacion<--------------------------------------------");
+    	LOGGER.info("--------------------------------------->Recuperando informacion!<--------------------------------------------");
     	LOGGER.info("------------------------------------------------------------------------------------------------------------");
         List<LocationStats> newStats = new ArrayList<>();
         HttpClient client = HttpClient.newHttpClient();
