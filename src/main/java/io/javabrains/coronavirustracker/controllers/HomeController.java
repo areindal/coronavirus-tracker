@@ -22,17 +22,17 @@ public class HomeController {
     CoronaVirusDataService coronaVirusDataService;
     private static String ORDER_BY_CASES_CRECIENTE = "C";
     private static String ORDER_BY_CASES_DECRECIENTE = "D";
+    private static String COMPRESSED_DATA = "C"; //Shows data group by country, not by region
 
     @GetMapping("/")
-    public String home(@RequestParam(name = "id", required=false) String opcion,@RequestParam(name = "order", required=false) String order,Model model) {
+    public String home(@RequestParam(name = "type", required=false) String opcion,@RequestParam(name = "order", required=false) String order,Model model) {
         List<LocationStats> allStats = coronaVirusDataService.getAllStats();
-        if (opcion!=null && opcion.equals("C"))
-        	allStats = contraida(allStats);
-        allStats = ordenar(allStats, order);
+        if (opcion!=null && opcion.equals(COMPRESSED_DATA))
+        	allStats = join(allStats);
+        allStats = order(allStats, order);
         int totalReportedCases = allStats.stream().mapToInt(stat -> stat.getLatestTotalCases()).sum();
         int totalNewCases = allStats.stream().mapToInt(stat -> stat.getDiffFromPrevDay()).sum();
         int totalNewCases2 = allStats.stream().mapToInt(stat -> stat.getDiffFromPrevDay2()).sum();
-        //	allStats = contraida(allStats);
         model.addAttribute("locationStats", allStats);
         model.addAttribute("lastDateData", allStats.get(0).getLastDateData());
         model.addAttribute("totalReportedCases", totalReportedCases);
@@ -42,11 +42,10 @@ public class HomeController {
         return "home";        
     }
     
-    private List<LocationStats> contraida (List<LocationStats> stats){
+    private List<LocationStats> join (List<LocationStats> stats){
     	HashMap<String, LocationStats> aux = new HashMap<>();
     	
     	for (LocationStats stat:stats) {
-	    	//if (stat.getCountry().equalsIgnoreCase("Australia")) {	
 	    		if (aux.containsKey(stat.getCountry())) {
 	    			LocationStats statAux = aux.get(stat.getCountry());
 	    			statAux.setDiffFromPrevDay(statAux.getDiffFromPrevDay()+stat.getDiffFromPrevDay());
@@ -69,7 +68,7 @@ public class HomeController {
     	return res;
     }
     
-    private List<LocationStats> ordenar (List<LocationStats> stats,String order){
+    private List<LocationStats> order (List<LocationStats> stats,String order){
     	if (ORDER_BY_CASES_DECRECIENTE.equals(order))
     		stats.sort(Comparator.comparing(LocationStats::getLatestTotalCases).reversed());
     	else if (ORDER_BY_CASES_CRECIENTE.equals(order))
